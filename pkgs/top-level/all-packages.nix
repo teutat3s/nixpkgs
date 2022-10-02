@@ -21269,6 +21269,8 @@ with pkgs;
     wine-staging = pkgsi686Linux.wine-staging;
   };
 
+  pivy = callPackage ../tools/security/pivy { };
+
   pkcs11helper = callPackage ../development/libraries/pkcs11helper { };
 
   pkgdiff = callPackage ../tools/misc/pkgdiff { };
