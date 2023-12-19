@@ -511,6 +511,7 @@ in {
   mate = handleTest ./mate.nix {};
   matomo = handleTest ./matomo.nix {};
   matrix-appservice-irc = handleTest ./matrix/appservice-irc.nix {};
+  matrix-authentication-service = handleTest ./matrix/matrix-authentication-service.nix {};
   matrix-conduit = handleTest ./matrix/conduit.nix {};
   matrix-synapse = handleTest ./matrix/synapse.nix {};
   matrix-synapse-workers = handleTest ./matrix/synapse-workers.nix {};
