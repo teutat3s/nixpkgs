@@ -92,6 +92,10 @@ rustPlatform.buildRustPackage rec {
     cp -r translations   "$out/share/$pname/translations"
   '';
 
+  passthru = {
+    tests = { inherit (nixosTests) matrix-authentication-service; };
+  };
+
   meta = {
     description = "OAuth2.0 + OpenID Provider for Matrix Homeservers";
     homepage = "https://github.com/element-hq/matrix-authentication-service";
