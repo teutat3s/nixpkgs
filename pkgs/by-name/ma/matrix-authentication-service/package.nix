@@ -13,6 +13,7 @@
   darwin,
   open-policy-agent,
   cctools,
+  nixosTests,
 }:
 
 rustPlatform.buildRustPackage rec {
@@ -88,6 +89,10 @@ rustPlatform.buildRustPackage rec {
     cp -r templates   "$out/share/$pname/templates"
     cp -r translations   "$out/share/$pname/translations"
   '';
+
+  passthru = {
+    tests = { inherit (nixosTests) matrix-authentication-service; };
+  };
 
   meta = {
     description = "OAuth2.0 + OpenID Provider for Matrix Homeservers";
