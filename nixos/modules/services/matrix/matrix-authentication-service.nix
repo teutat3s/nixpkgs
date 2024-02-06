@@ -26,8 +26,8 @@ in
     settings = lib.mkOption {
       default = { };
       description = lib.mdDoc ''
-        The primary synapse configuration. See the
-        [sample configuration](https://github.com/matrix-org/synapse/blob/v${pkgs.matrix-synapse-unwrapped.version}/docs/sample_config.yaml)
+        The primary mas configuration. See the
+        [configuration reference](https://matrix-org.github.io/matrix-authentication-service/usage/configuration.html)
         for possible values.
 
         Secrets should be passed in by using the `extraConfigFiles` option.
@@ -61,6 +61,24 @@ in
             default = "http://localhost:8008";
             description = lib.mdDoc ''
               The URL to which the homeserver is accessible from the service.
+            '';
+          };
+          upstream_oauth2.providers = lib.mkOption {
+            type = types.listOf (types.submodule {
+              freeformType = format.type;
+              options = {
+                id = lib.mkOption {
+                  type = types.str;
+                  example = "01H8PKNWKKRPCBW4YGH1RWV279";
+                  description = lib.mdDoc ''
+                    Unique id for the provider, must be a ULID, and can be generated using online tools like https://www.ulidtools.com
+                  '';
+                };
+              };
+            });
+            default = [{}];
+            description = lib.mdDoc ''
+              Configuration of upstream providers
             '';
           };
         };
@@ -122,6 +140,7 @@ in
         ExecStartPre = [
           ("+" + (pkgs.writeShellScript "matrix-authentication-service-generate-config" ''
             ${lib.getExe cfg.package} config generate > ${cfg.dataDir}/config.yaml
+            ${lib.getExe cfg.package} config check --config ${cfg.dataDir}/config.yaml --config ${configFile}
           ''))
         ];
         ExecStart = ''

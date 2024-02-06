@@ -109,6 +109,33 @@ in {
             secret = authenticationServiceAdminApiSecret;
             endpoint = "https://localhost:8448";
           };
+          upstream_oauth2 = {
+            providers = [
+              {
+                id = "01H8PKNWKKRPCBW4YGH1RWV279";
+                issuer = "https://<keycloak>/realms/<realm>";
+                token_endpoint_auth_method = "client_secret_basic";
+                client_id = "matrix-authentication-service";
+                client_secret = "<client-secret>";
+                scope = "openid profile email";
+                claims_imports = {
+                  localpart = {
+                    action = "require";
+                    template = "{{ user.preferred_username }}";
+                  };
+                  displayname = {
+                    action = "suggest";
+                    template = "{{ user.name }}";
+                  };
+                  email = {
+                    action = "suggest";
+                    template = "{{ user.email }}";
+                    set_email_verification = "always";
+                  };
+                };
+              }
+            ];
+          };
         };
       };
 
@@ -227,8 +254,6 @@ in {
         "journalctl -u matrix-synapse.service | grep -q 'Connected to redis'"
     )
     serverpostgres.require_unit_state("postgresql.service")
-    serverpostgres.succeed("REQUESTS_CA_BUNDLE=${ca_pem} register_new_matrix_user -u ${testUser} -p ${testPassword} -a -k ${registrationSharedSecret} https://localhost:8448/")
-    serverpostgres.succeed("obtain-token-and-register-email")
     serverpostgres.wait_for_unit("matrix-authentication-service.service")
     serverpostgres.wait_until_succeeds(
         "curl --fail -L http://localhost:8080/"
