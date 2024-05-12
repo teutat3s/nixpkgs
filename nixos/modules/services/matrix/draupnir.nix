@@ -40,6 +40,7 @@ in
 
           username = lib.mkOption {
             type = lib.types.str;
+            default = "draupnir";
             description = ''
               Account name on the Matrix homeserver.
             '';
@@ -267,7 +268,7 @@ in
       serviceConfig = {
         ExecStart = utils.escapeSystemdExecArgs ([
           (lib.getExe cfg.package)
-          "--draupnir-config" configFile
+          "--draupnir-config" "${builtins.toString configFile}"
         ] ++ lib.optionals (cfg.pantalaimon.enable && cfg.pantalaimon.passwordFile != null) [
           "--pantalaimon-password-path"
           "/run/credentials/draupnir.service/pantalaimon_password"
@@ -300,7 +301,7 @@ in
   #endregion
 
   meta = {
-    doc = ./draupnir.md;
+    #doc = ./draupnir.md;
     maintainers = with lib.maintainers; [ RorySys ];
   };
 }
