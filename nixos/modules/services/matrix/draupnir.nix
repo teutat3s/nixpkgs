@@ -14,7 +14,7 @@ in
     package = lib.mkPackageOption pkgs "draupnir" { };
 
     accessTokenFile = lib.mkOption {
-      type = with lib.types; nullOr path;
+      type = with lib.types; nullOr str;
       default = null;
       description = ''
         File containing the access token for Draupnir's Matrix account.
