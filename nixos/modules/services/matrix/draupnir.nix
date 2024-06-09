@@ -148,7 +148,7 @@ in
             type = lib.types.bool;
             default = null;
             description = ''
-              If `true` (default), the bot will only autojoin rooms if the user is a manager.
+              If true (the default), Draupnir will only accept invites from users present in managementRoom.
             '';
           };
 
