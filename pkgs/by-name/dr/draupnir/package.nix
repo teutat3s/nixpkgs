@@ -2,7 +2,6 @@
 , fetchFromGitHub
 , makeWrapper
 , nodejs
-, yarn
 , matrix-sdk-crypto-nodejs
 , mkYarnPackage
 , fetchYarnDeps
