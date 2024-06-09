@@ -31,7 +31,7 @@ import ../make-test-python.nix (
   {
     name = "draupnir";
     meta = with pkgs.lib; {
-      maintainers = [ maintainers.Rory ];
+      maintainers = [ maintainers.RorySys ];
     };
 
     nodes = {
