@@ -232,9 +232,9 @@ in
       # Unsupported but available options
       # - Crypto
       ++ lib.optionals (cfg.pantalaimon.enable) [ ''Using Draupnir with Pantalaimon is known to break some features, and is thus unsupported.
-            Encryption support should only be enabled if you require an encrypted management room or use Draupnir in encrypted rooms.'' ]
+            Encryption support should only be enabled if you require an encrypted management room or want to use Draupnir to redact messages in encrypted rooms.'' ]
       ++ lib.optionals (cfg.settings ? experimentalRustCrypto && cfg.settings.experimentalRustCrypto) [ ''Using Draupnir with experimental Rust Crypto support is untested and unsupported.
-            Encryption support should only be enabled if you require an encrypted management room or use Draupnir in encrypted rooms.'' ]
+            Encryption support should only be enabled if you require an encrypted management room or want to use Draupnir to redact messages in encrypted rooms.'' ]
 
       # - Deprecated options
       ++ lib.optionals (cfg.settings ? verboseLogging && cfg.settings.verboseLogging) [ "Verbose logging in Draupnir is deprecated and may be removed in a future version." ]
