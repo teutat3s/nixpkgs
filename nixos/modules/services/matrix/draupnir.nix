@@ -117,11 +117,10 @@ in
                 };
                 username = lib.mkOption {
                   type = lib.types.str;
-                  default = cfg.pantalaimon.username;
-                  defaultText = "cfg.pantalaimon.username";
+                  default = "draupnir";
                   readOnly = true;
                   description = ''
-                    Account name on the Matrix homeserver. Configured in `services.draupnir.pantalaimon.username`.
+                    Account name on the Matrix homeserver, used by pantalaimon. Defaults to `draupnir`. Configured in `services.draupnir.pantalaimon.username`.
                   '';
                 };
               };
