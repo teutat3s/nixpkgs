@@ -90,24 +90,50 @@ import ../make-test-python.nix (
         ];
       };
 
-      draupnir = { pkgs, ... }: {
+      draupnir = { ... }: {
         services.draupnir = {
           enable = true;
-          homeserverUrl = "http://homeserver:8448";
+          accessTokenFile = "/tmp/draupnir-access-token";
+          settings = {
+            homeserverUrl = "http://homeserver:8448";
+            managementRoom = "#moderators:homeserver";
+          };
+        };
+        environment.systemPackages = [
+          (pkgs.writeShellScriptBin "get_draupnir_access_token" ''
+            exec ${pkgs.curl}/bin/curl \
+              -X POST -s \
+              -d '{"type":"m.login.password", "user":"draupnir", "password":"draupnir-password"}' \
+              http://homeserver:8448/_matrix/client/v3/login \
+              | ${pkgs.jq}/bin/jq --join-output '.access_token' \
+              > /tmp/draupnir-access-token
+          ''
+          )
+        ];
+      };
+
+      draupnirpantalaimon = { pkgs, ... }: {
+        services.draupnir = {
+          enable = true;
           pantalaimon = {
             enable = true;
             username = "draupnir";
             passwordFile = pkgs.writeText "password.txt" "draupnir-password";
-            # otherwise draupnir tries to connect to ::1, which is not listened by pantalaimon
-            options.listenAddress = "127.0.0.1";
+            options = {
+              # otherwise draupnir tries to connect to ::1, which is not listened by pantalaimon
+              listenAddress = "127.0.0.1";
+              homeserver = "http://homeserver:8448";
+            };
           };
-          managementRoom = "#moderators:homeserver";
+          settings = {
+            managementRoom = "#moderators-encrypted:homeserver";
+          };
         };
       };
 
       client = { pkgs, ... }: {
         environment.systemPackages = [
-          (pkgs.writers.writePython3Bin "create_management_room_and_invite_draupnir"
+          (pkgs.writers.writePython3Bin "create_management_rooms_and_invite_draupnir"
             { libraries = with pkgs.python3Packages; [
                 matrix-nio
               ] ++ matrix-nio.optional-dependencies.e2e;
@@ -128,11 +154,19 @@ import ../make-test-python.nix (
                 room = await client.room_create(
                     name="Moderators",
                     alias="moderators",
+                )
+
+                encrypted_room = await client.room_create(
+                    name="Moderators-encrypted",
+                    alias="moderators-encrypted",
                     initial_state=[EnableEncryptionBuilder().as_dict()],
                 )
 
                 await client.join(room.room_id)
                 await client.room_invite(room.room_id, "@draupnir:homeserver")
+
+                await client.join(encrypted_room.room_id)
+                await client.room_invite(encrypted_room.room_id, "@draupnir:homeserver")
 
             asyncio.run(main())
           ''
@@ -157,20 +191,33 @@ import ../make-test-python.nix (
       with subtest("start draupnir"):
         draupnir.start()
 
-        # wait for pantalaimon to be ready
-        draupnir.wait_for_unit("pantalaimon-draupnir.service")
+        draupnir.wait_until_succeeds("curl --fail -L http://homeserver:8448/")
+
+        draupnir.succeed("get_draupnir_access_token")
+
         draupnir.wait_for_unit("draupnir.service")
 
-        draupnir.wait_until_succeeds("curl --fail -L http://localhost:8009/")
-
-      with subtest("ensure draupnir can be invited to the management room"):
+      with subtest("ensure draupnir can be invited to the management rooms"):
         client.start()
 
         client.wait_until_succeeds("curl --fail -L http://homeserver:8448/")
 
-        client.succeed("create_management_room_and_invite_draupnir")
+        client.succeed("create_management_rooms_and_invite_draupnir")
 
         draupnir.wait_for_console_text("Startup complete. Now monitoring rooms")
+
+      with subtest("start draupnirpantalaimon"):
+        draupnirpantalaimon.start()
+
+        # wait for pantalaimon to be ready
+        draupnirpantalaimon.wait_for_unit("pantalaimon-draupnir.service")
+        draupnirpantalaimon.wait_for_unit("draupnir.service")
+
+        draupnirpantalaimon.wait_until_succeeds("curl --fail -L http://localhost:8009/")
+
+      with subtest("ensure draupnir can be invited to the encrypted management room"):
+
+        draupnirpantalaimon.wait_for_console_text("Startup complete. Now monitoring rooms")
     '';
   }
 )
