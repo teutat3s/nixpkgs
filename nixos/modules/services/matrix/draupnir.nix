@@ -133,10 +133,10 @@ in
             type = lib.types.str;
 
             defaultText = ''
-              URL to the pantalaimon instance, if enabled. Else unset.
+              URL to the pantalaimon instance, if configured. Else unset.
             '';
             description = ''
-              Base URL of the Matrix homeserver, that provides the Client-Server API.
+              Endpoint URL that Draupnir uses to interact with the matrix homeserver (client-server API).
               If `services.draupnir.pantalaimon.enable` is `true`, this option will become read only. Configure `services.draupnir.pantalaimon.options.homeserver` instead in that case.
               The listen address of `pantalaimon` will then become the `homeserverUrl` of `draupnir`.
             '';
