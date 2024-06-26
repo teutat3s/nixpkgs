@@ -120,7 +120,7 @@ in
                   default = "draupnir";
                   readOnly = true;
                   description = ''
-                    Account name on the Matrix homeserver, used by pantalaimon. Defaults to `draupnir`. Configured in `services.draupnir.pantalaimon.username`.
+                    Account name on the Matrix homeserver, used by pantalaimon. Defaults to `draupnir`.
                   '';
                 };
               };
@@ -133,7 +133,7 @@ in
             type = lib.types.str;
 
             defaultText = ''
-              URL to the pantalaimon instance, if configured. Else unset.
+              URL to the pantalaimon instance, if enabled. Else unset.
             '';
             description = ''
               Endpoint URL that Draupnir uses to interact with the matrix homeserver (client-server API).
@@ -148,7 +148,7 @@ in
             type = lib.types.bool;
             default = true;
             description = ''
-              If true (the default), Draupnir will only accept invites from users present in managementRoom.
+              If `true` (the default), Draupnir will only accept invites from users present in the room which `services.draupnir.managementRoom` is set to.
             '';
           };
 
@@ -159,6 +159,7 @@ in
               A list of reasons for which the bot will automatically redact messages.
             '';
           };
+
           managementRoom = lib.mkOption {
             type = lib.types.str;
             example = "#moderators:example.org";
