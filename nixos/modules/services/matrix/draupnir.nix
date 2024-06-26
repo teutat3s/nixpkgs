@@ -146,7 +146,7 @@ in
           #region Common settings
           autojoinOnlyIfManager = lib.mkOption {
             type = lib.types.bool;
-            default = null;
+            default = true;
             description = ''
               If true (the default), Draupnir will only accept invites from users present in managementRoom.
             '';
@@ -154,7 +154,7 @@ in
 
           automaticallyRedactForReasons = lib.mkOption {
             type = lib.types.listOf lib.types.str;
-            default = null;
+            default = [];
             description = ''
               A list of reasons for which the bot will automatically redact messages.
             '';
