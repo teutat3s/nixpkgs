@@ -17301,13 +17301,6 @@
     matrix = "@emma:rory.gay"; # preferred
     name = "Rory&";
   };
-  RorySys = {
-    email = "root@rory.gay";
-    github = "TheArcaneBrony";
-    githubId = 13570458;
-    matrix = "@emma:rory.gay"; # preferred
-    name = "Rory&";
-  };
   rosehobgoblin = {
     name = "J. L. Bowden";
     github = "rosehobgoblin";
