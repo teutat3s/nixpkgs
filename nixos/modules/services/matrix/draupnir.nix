@@ -299,7 +299,7 @@ in
   #endregion
 
   meta = {
-    doc = ./draupnir.md;
+    #doc = ./draupnir.md;
     maintainers = with lib.maintainers; [ RorySys ];
   };
 }
