@@ -98,6 +98,64 @@ in {
 
       services.matrix-authentication-service = {
         enable = true;
+        createDatabase = true;
+        extraConfigFiles = [(pkgs.writeText "mas-extra-config.yml" ''
+secrets:
+  encryption: 85c39ce195bd01d17b583687edf20ae09eede66f4ce043f15afc2afa719249c9
+  keys:
+  - kid: LYeYXYzVil
+    key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpAIBAAKCAQEA1l1iXIE9yFksgKmJ58hk9oj7UQ4iX5HX9Ll/EUDCRu+fuPuB
+      kYnski19RNoVIWQt3f8HYTeQLF1vhvj9AKFw+F0jklkC8/YrHzNPiB7LS08X4+K8
+      1DW+YI7EY0u0iB+uaChHvK8zYrk+qRmH0OGR7LdXRNqM75xMglkcnMagFbc/3ipO
+      47SgHFaUGkM62epeQPIsJq6BicxCyH/LhoccUtnj5+EOAF+eo8QPRj+ISfDdCebS
+      L7iYnpECFggVlexgbVRfeFtxDfHu5hpxjKwbTKYjDLMrZwlI0js4ZN9qchREAJ21
+      km4Xq4bqP+Pf0QiaEjeoqF/ZMmCFYY2gT3DSUQIDAQABAoIBAHLwd4EqOzplthr2
+      zN7e8GPQZxC7B2s/BBBQNfXGR2VJrta85GhpD9QBWB3G4XWaBY325LoX1NI090vj
+      zaS865oANsaNu6ub3ttH4+kUueSTcDfcp2sRthaH9n1XZmFmu1lV38EoH+FbemGp
+      Ms2pZVkLpVth5BfGMq/hoBnf1o5NTACSHd2InQnUQAbY16NvYZiY37hI3LllyIPI
+      z7hBvFcRf2JD3Bn7nmV+lTBOtcYA5f6ZrO0V2Ah75AGb6QAUSWgV9edqXkp6OmAV
+      jcVqfVsPwoPRpaarQ4M1lcvhYgwBKuUXFtcNPqqNk9ldYuYy/UW4E+psRrXkwvs2
+      50TB78ECgYEA3nx7XBZhYrvUEqLUYeIRhnRGoY0/snyjAMibl6NoJZLpyrk+b70x
+      Dh1k6LY9RwLfxRHDqnnHy9YY5Iu9QBTBYud8dD0JNOUUC8QWYV1G7AYLS9oe8kM5
+      z4aWhgNR3a9DidPQtv2SyK+1ZmGhB80T7nDlsK17fjjTUnj7lMhgnbUCgYEA9qe4
+      zzHfCZsDwoPPuMuAkZIjRxnwReY9fyAGGMdW4VrOgrOyVj4dDF0/R8p3LlS+TiUw
+      6bVlWqbP+H3Zkx9VaH7EUmiTFulshi/MxSBizdj4SHDhYHK+4H5PkeDusMTGAvOk
+      QaXB8ZbulHT3mdUc8lHucRHw2TIs8O8zaFBMo60CgYEAyCsxBYnxNlaNF/M9p48w
+      e0qT3XdqjphKQ0M5kXVoFx4Vj9mYTgnmX6+cgS6s9P2l+/TemLsWQdMu9DixHT1P
+      PD/OnfnoFZngrjFOfWzhiSpq8WSeIRLQqWCKfqnv9sZfulpC1tBPRpWnXCSML6uX
+      uhgC3zFGASr5HaNRneul2V0CgYBbkYSQlwkgPcY1jk2tYw9F+6TRHpYOvR0TdsYM
+      qOReISINb7zDO6f5ER0O/+Ei+B72T+RKvybzcn4+2CnP7o/8jSNBHMWOefXqExDI
+      Fe/YT7ZM3mstLSwjl4DevUyfn02LhvvxyyGnGMtVnd7V40Ity7DjlS9+0pvQjlzd
+      WwI4uQKBgQDQA3JSEl95T2nYmmlvX8a5rSNSSK/d6GRDvaNFAk659Jf3X2aYpHFM
+      TRO5t2EDIrBCpgBG2Tj9yOnm9Zht/T+783ziQ/6p2q1QX7Lfr6MiwnND4Cw0ZvYL
+      9xDiujZMtAEaEiz0a6pfHn/EfTA6Qvw/KYFmtXFGa+KuOwX4KgFlwQ==
+      -----END RSA PRIVATE KEY-----
+  - kid: cdMTgbM9rx
+    key: |
+      -----BEGIN EC PRIVATE KEY-----
+      MHcCAQEEIOlSK0D4WKNjPrfxojWNJSoFzYJ7TUNC4qVv0C3b+LSioAoGCCqGSM49
+      AwEHoUQDQgAE0lqYrp1gpDmCZASZ1L7Y5r0Kk9kbv6Qjn8FXzP4ujnFN8tFkHsun
+      MqmeW3j5Qmtw24gcEU1IPW6QwMz/ozosWQ==
+      -----END EC PRIVATE KEY-----
+  - kid: Hb1P9OK0rc
+    key: |
+      -----BEGIN EC PRIVATE KEY-----
+      MIGkAgEBBDAuDEN6zp1bBf2R3bBEKn8yGKlkV8jfNe1lZ1yvfsVWBPbVBoxJcEWG
+      krR1vBYdtjSgBwYFK4EEACKhZANiAAThozHhNOUZcybKe7W9K5zVZIXgmM3Fze/e
+      s6bHLpwPR1EEYNARPW7aLPPjf4d+iPXW5y6J0KCKvaXWvFAM9eL6a8X/W93VZmgO
+      8A9QN/PWOUz2ZOsp1xLWvgmZl4zHYNw=
+      -----END EC PRIVATE KEY-----
+  - kid: NpIOF10t5M
+    key: |
+      -----BEGIN EC PRIVATE KEY-----
+      MHQCAQEEIP3Vit8kpPw+JxnPLviS7+bM1EAJquG+0HFN6MT4Q1eDoAcGBSuBBAAK
+      oUQDQgAE2rnrYryxmN3RAgwh9JqrS7/cft592o9dG6C7sUloIpYcZVmZsVGpOUzB
+      UMyVVDVWwkAdxfASbDGu4yiSwy9uEw==
+      -----END EC PRIVATE KEY-----
+
+        '')];
         settings = {
           clients = [ {
             client_id = "0000000000000000000SYNAPSE";

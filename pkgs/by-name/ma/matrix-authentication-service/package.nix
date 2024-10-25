@@ -13,6 +13,7 @@
   darwin,
   open-policy-agent,
   cctools,
+  nixosTests,
 }:
 
 rustPlatform.buildRustPackage rec {
