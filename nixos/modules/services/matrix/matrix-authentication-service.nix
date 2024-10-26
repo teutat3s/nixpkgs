@@ -209,6 +209,7 @@ in
                 id = mkOption {
                   type = types.str;
                   example = "01H8PKNWKKRPCBW4YGH1RWV279";
+                  default = "";
                   description = mdDoc ''
                     Unique id for the provider, must be a ULID, and can be generated using online tools like https://www.ulidtools.com
                   '';
