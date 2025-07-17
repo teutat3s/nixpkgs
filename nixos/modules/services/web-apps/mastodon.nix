@@ -250,7 +250,8 @@ let
 
   nginxCommonHeaders =
     ''
-      add_header Strict-Transport-Security 'max-age=31536000';
+      add_header Cache-Control 'public, max-age=2419200, must-revalidate';
+      add_header Strict-Transport-Security 'max-age=63072000';
     ''
     # Upstream does not supported HTTP3 protocol.
     +
@@ -262,15 +263,6 @@ let
         ''
           add_header Alt-Svc 'h3=":$server_port"; ma=604800';
         '';
-
-  nginxProxyHeaders = ''
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header Proxy "";
-  '';
-
 in
 {
 
@@ -1125,110 +1117,85 @@ in
             enableACME = lib.mkDefault true;
 
             locations."/" = {
-              tryFiles = "$uri @mastodon";
               priority = 1100;
-
-              extraConfig = nginxCommonHeaders;
+              tryFiles = "$uri @mastodon";
             };
 
-            locations."^~ /assets/" = {
+            locations."/sw.js" = {
+              priority = 3100;
+              extraConfig = ''
+                add_header Cache-Control 'public, max-age=604800, must-revalidate';
+                add_header Strict-Transport-Security 'max-age=63072000';
+              '';
+              tryFiles = "$uri =404";
+            };
+
+            locations."~ ^/assets/" = {
               priority = 3110;
-
-              extraConfig = ''
-                add_header Cache-Control 'public, max-age=2419200, immutable';
-                add_header Content-Security-Policy "default-src 'none'; form-action 'none'";
-                add_header X-Content-Type-Options 'nosniff';
-                ${nginxCommonHeaders}
-              '';
+              extraConfig = nginxCommonHeaders;
+              tryFiles = "$uri =404";
             };
 
-            locations."^~ /avatars/" = {
+            locations."~ ^/avatars/" = {
               priority = 3120;
-
-              extraConfig = ''
-                add_header Cache-Control 'public, max-age=2419200, immutable';
-                add_header Content-Security-Policy "default-src 'none'; form-action 'none'";
-                add_header X-Content-Type-Options 'nosniff';
-                ${nginxCommonHeaders}
-              '';
+              extraConfig = nginxCommonHeaders;
+              tryFiles = "$uri =404";
             };
 
-            locations."^~ /emoji/" = {
+            locations."~ ^/emoji/" = {
               priority = 3130;
-
-              extraConfig = ''
-                add_header Cache-Control 'public, max-age=2419200, immutable';
-                add_header Content-Security-Policy "default-src 'none'; form-action 'none'";
-                add_header X-Content-Type-Options 'nosniff';
-                ${nginxCommonHeaders}
-              '';
+              extraConfig = nginxCommonHeaders;
+              tryFiles = "$uri =404";
             };
 
-            locations."^~ /headers/" = {
+            locations."~ ^/headers/" = {
               priority = 3140;
-
-              extraConfig = ''
-                add_header Cache-Control 'public, max-age=2419200, immutable';
-                add_header Content-Security-Policy "default-src 'none'; form-action 'none'";
-                add_header X-Content-Type-Options 'nosniff';
-                ${nginxCommonHeaders}
-              '';
+              extraConfig = nginxCommonHeaders;
+              tryFiles = "$uri =404";
             };
 
-            locations."^~ /ocr/" = {
+            locations."~ ^/packs/" = {
               priority = 3150;
-
-              extraConfig = ''
-                add_header Cache-Control 'public, max-age=2419200, immutable';
-                add_header Content-Security-Policy "default-src 'none'; form-action 'none'";
-                add_header X-Content-Type-Options 'nosniff';
-                ${nginxCommonHeaders}
-              '';
+              extraConfig = nginxCommonHeaders;
+              tryFiles = "$uri =404";
             };
 
-            locations."^~ /packs/" = {
+            locations."~ ^/shortcuts/" = {
               priority = 3160;
-
-              extraConfig = ''
-                add_header Cache-Control 'public, max-age=2419200, immutable';
-                add_header Content-Security-Policy "default-src 'none'; form-action 'none'";
-                add_header X-Content-Type-Options 'nosniff';
-                ${nginxCommonHeaders}
-              '';
+              extraConfig = nginxCommonHeaders;
+              tryFiles = "$uri =404";
             };
 
-            locations."^~ /sounds/" = {
+            locations."~ ^/sounds/" = {
               priority = 3170;
-
-              extraConfig = ''
-                add_header Cache-Control 'public, max-age=2419200, immutable';
-                add_header Content-Security-Policy "default-src 'none'; form-action 'none'";
-                add_header X-Content-Type-Options 'nosniff';
-                ${nginxCommonHeaders}
-              '';
+              extraConfig = nginxCommonHeaders;
+              tryFiles = "$uri =404";
             };
 
-            locations."^~ /system/" = {
+            locations."~ ^/system/" = {
               alias = "/var/lib/mastodon/public-system/";
               priority = 3180;
-
               extraConfig = ''
                 add_header Cache-Control 'public, max-age=2419200, immutable';
-                add_header Content-Security-Policy "default-src 'none'; form-action 'none'";
+                add_header Strict-Transport-Security 'max-age=63072000';
                 add_header X-Content-Type-Options 'nosniff';
-                ${nginxCommonHeaders}
+                add_header Content-Security-Policy "default-src 'none'; form-action 'none'";
               '';
+              tryFiles = "$uri =404";
             };
 
-            locations."^~ /api/v1/streaming/" = {
+            locations."^~ /api/v1/streaming" = {
               proxyPass = "http://mastodon-streaming/";
               proxyWebsockets = true;
               priority = 3190;
 
               extraConfig = ''
-                ${nginxProxyHeaders}
+                proxy_set_header Proxy "";
+
                 proxy_buffering off;
                 proxy_redirect off;
+
+                add_header Strict-Transport-Security 'max-age=63072000';
 
                 tcp_nodelay on;
               '';
@@ -1240,7 +1207,7 @@ in
               priority = 4100;
 
               extraConfig = ''
-                ${nginxProxyHeaders}
+                proxy_set_header Proxy "";
                 proxy_pass_header Server;
 
                 proxy_buffering on;
@@ -1252,8 +1219,6 @@ in
                 proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
                 add_header X-Cached $upstream_cache_status;
 
-                proxy_hide_header Strict-Transport-Security;
-                add_header Strict-Transport-Security 'max-age=31536000';
                 ${lib.optionalString
                   (
                     config.services.nginx.virtualHosts.${cfg.localDomain}.quic
@@ -1269,6 +1234,7 @@ in
             };
 
             extraConfig = ''
+              client_max_body_size 99m;
               error_page 404 500 501 502 503 504 /500.html;
             '';
           };
