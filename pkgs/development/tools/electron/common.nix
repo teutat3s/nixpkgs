@@ -3,12 +3,10 @@
   stdenv,
   chromium,
   nodejs,
-  fetchYarnDeps,
+  yarn-berry_4,
   fetchNpmDeps,
   fetchpatch,
-  fixup-yarn-lock,
   npmHooks,
-  yarn,
   libnotify,
   unzip,
   pkgsBuildHost,
@@ -22,6 +20,7 @@
 
 let
   gclientDeps = gclient2nix.importGclientDeps info.deps;
+  yarn-berry = yarn-berry_4;
 in
 
 ((chromium.override { upstream-info = info.chromium; }).mkDerivation (base: {
@@ -42,15 +41,14 @@ in
 
   nativeBuildInputs = base.nativeBuildInputs ++ [
     nodejs
-    yarn
-    fixup-yarn-lock
+    yarn-berry.yarnBerryConfigHook
     unzip
     npmHooks.npmConfigHook
     gclient2nix.gclientUnpackHook
   ];
   buildInputs = base.buildInputs ++ [ libnotify ];
 
-  electronOfflineCache = fetchYarnDeps {
+  electronOfflineCache = yarn-berry.fetchYarnBerryDeps {
     yarnLock = gclientDeps."src/electron".path + "/yarn.lock";
     sha256 = info.electron_yarn_hash;
   };
@@ -189,10 +187,7 @@ in
 
     (
       cd electron
-      export HOME=$TMPDIR/fake_home
-      yarn config --offline set yarn-offline-mirror $electronOfflineCache
-      fixup-yarn-lock yarn.lock
-      yarn install --offline --frozen-lockfile --ignore-scripts --no-progress --non-interactive
+      yarnOfflineCache=$electronOfflineCache yarnBerryConfigHook
     )
 
     (
