@@ -48,10 +48,12 @@ in
   ];
   buildInputs = base.buildInputs ++ [ libnotify ];
 
-  electronOfflineCache = yarn-berry.fetchYarnBerryDeps {
+  yarnOfflineCache = yarn-berry.fetchYarnBerryDeps {
     yarnLock = gclientDeps."src/electron".path + "/yarn.lock";
     sha256 = info.electron_yarn_hash;
   };
+  # Manually run 'yarn install' during postPatch phase
+  dontYarnBerryInstallDeps = true;
   npmDeps = fetchNpmDeps rec {
     src = gclientDeps."src".path;
     # Assume that the fetcher always unpack the source,
@@ -187,7 +189,7 @@ in
 
     (
       cd electron
-      yarnOfflineCache=$electronOfflineCache yarnBerryConfigHook
+      yarnBerryConfigHook
     )
 
     (

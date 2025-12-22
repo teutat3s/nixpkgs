@@ -56,10 +56,10 @@
             },
             "src/electron": {
                 "args": {
-                    "hash": "sha256-ssEFUO6UFZI5/a49oPbYXMhYCyHnE+HGK8H26jKN5JE=",
+                    "hash": "sha256-Ey931hBHgLz81SsUlwdMXsQ+WkwBS+xtSNQEjh8vEY4=",
                     "owner": "electron",
                     "repo": "electron",
-                    "tag": "v37.10.3"
+                    "rev": "919f4110af532326299d04f7021ee4d8917fd136"
                 },
                 "fetcher": "fetchFromGitHub"
             },
@@ -1326,7 +1326,7 @@
                 "fetcher": "fetchFromGitiles"
             }
         },
-        "electron_yarn_hash": "sha256-ouaxVsLQ+IapxTJxM7KFuLq9PSsMRhPwrWYT/opxE0I=",
+        "electron_yarn_hash": "sha256-X+RS83XNgDRk9kTILLBdropRdlaAHQ/pDTrb98S8/gk=",
         "modules": "136",
         "node": "22.21.1",
         "version": "37.10.3"
@@ -1388,10 +1388,10 @@
             },
             "src/electron": {
                 "args": {
-                    "hash": "sha256-gSW1dI2PBGaLleuekWEI8Om/HE+V7w7QPy3wWxfN0V0=",
+                    "hash": "sha256-GANGiMWc4D7ONilOyg08Wwl2wnVEWnj6qWqR1wBxguk=",
                     "owner": "electron",
                     "repo": "electron",
-                    "tag": "v38.7.2"
+                    "rev": "bc8ecdf96ffd2648735a50702e594cb53275fe89"
                 },
                 "fetcher": "fetchFromGitHub"
             },
@@ -2650,7 +2650,7 @@
                 "fetcher": "fetchFromGitiles"
             }
         },
-        "electron_yarn_hash": "sha256-R5AHeNFOeH7ZXipzM9u08KG5zJhkDDTW4kGt3BYYN64=",
+        "electron_yarn_hash": "sha256-YKz9pBUel0oaoZTd2Bgvpemn0M7JX3/7KRpQIYVQfL4=",
         "modules": "139",
         "node": "22.21.1",
         "version": "38.7.2"
@@ -2712,10 +2712,10 @@
             },
             "src/electron": {
                 "args": {
-                    "hash": "sha256-AOXHA5RSV3Qeh+V2drghBlvfcqsK8YgGvM1OUVfIecg=",
+                    "hash": "sha256-Yw7mhai8I/2gLpVHQqAJgV/mW5TbjzkapwepGbkRm44=",
                     "owner": "electron",
                     "repo": "electron",
-                    "tag": "v39.2.7"
+                    "rev": "35a531953bafad7c8e7470bf234060660b80bf05"
                 },
                 "fetcher": "fetchFromGitHub"
             },
@@ -3998,7 +3998,7 @@
                 "fetcher": "fetchFromGitiles"
             }
         },
-        "electron_yarn_hash": "sha256-cwlcIKzorChaZeKiioEEK2JbfoahF6Ju/8huxUZgzcQ=",
+        "electron_yarn_hash": "sha256-uRbyQPxuDxSjq+nXJXLZsoy0LWFhMJFd3TYin6EtHZs=",
         "modules": "140",
         "node": "22.21.1",
         "version": "39.2.7"
