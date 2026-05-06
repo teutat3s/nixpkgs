@@ -5274,6 +5274,7 @@ with pkgs;
     electron_39-bin
     electron_40-bin
     electron_41-bin
+    electron_42-bin
     ;
 
   inherit (callPackages ../development/tools/electron/chromedriver { })
