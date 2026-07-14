@@ -56,7 +56,7 @@ click_log.basic_config(logger)
 
 def get_gclient_data(rev: str) -> any:
     output = subprocess.check_output(
-        ["gclient2nix", "generate",
+        ["/nix/store/b6mhj4m8xq3ac1mkg9y94kg1dkckpxj8-gclient2nix/bin/gclient2nix", "generate",
          f"https://github.com/electron/electron@{rev}",
          "--root", "src/electron"]
     )
