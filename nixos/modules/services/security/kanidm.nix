@@ -47,6 +47,7 @@ let
   # Remove null values, so we can document optional values that don't end up in the generated TOML file.
   filterConfig = converge (filterAttrsRecursive (_: v: v != null));
   serverConfigFile = settingsFormat.generate "server.toml" (filterConfig cfg.server.settings);
+  #mailSenderConfigFile = settingsFormat.generate "mail_sender.toml" (filterConfig cfg.mailSender.settings);
   clientConfigFile = settingsFormat.generate "kanidm-config.toml" (filterConfig cfg.client.settings);
   unixConfigFile = settingsFormat.generate "kanidm-unixd.toml" (filterConfig cfg.unix.settings);
   provisionSecretFiles = filter (x: x != null) (
@@ -395,6 +396,61 @@ in
         for possible values.
       '';
     };
+
+    mailSender.enable = mkEnableOption "the Kanidm mail sender";
+    mailSender.configFile = mkOption {
+      description = "Path to a file containing the mail-sender config toml. See https://github.com/kanidm/kanidm/blob/v1.10.4/examples/mail_sender.toml for an example config";
+      type = types.str;
+    };
+    #mailSender.settings = mkOption {
+    #  type = types.submodule {
+    #    freeformType = settingsFormat.type;
+    #    options = {
+    #      tokenFile = mkOption {
+    #        description = "Path to a file containing the token used to identify and authenticate to Kanidm to read the mail queue. This token *must* have read-write privileges in order to ensure that queued messages can be marked as sent";
+    #        type = types.str;
+    #      };
+    #      schedule = mkOption {
+    #        description = "A cron expression for how frequently the mail sender should check the mail queue for new messages. Default: every 5 seconds";
+    #        type = types.str;
+    #        default = "*/5 * * * * * *";
+    #      };
+    #      instanceDisplayName = mkOption {
+    #        description = "The display name of your Kanidm instance";
+    #        type = types.str;
+    #      };
+    #      instanceUrl = mkOption {
+    #        description = "The url of your Kanidm instance";
+    #        type = types.str;
+    #      };
+    #      mailFromAddress = mkOption {
+    #        description = "The address that messages should be sent from";
+    #        type = types.str;
+    #      };
+    #      mailReplyToAddress = mkOption {
+    #        description = " The reply-to address that will be set in messages";
+    #        type = types.str;
+    #      };
+    #      mailRelay = mkOption {
+    #        description = "The hostname/address of the outgoing SMTP relay. This must support TLS. You can specify the port as well if it is not the default (465)";
+    #        type = types.str;
+    #      };
+    #      mailUsername = mkOption {
+    #        description = "The username to authenticate to the SMTP relay as";
+    #        type = types.str;
+    #      };
+    #      mailPasswordFile = mkOption {
+    #        description = "Path to a file containing the password to authenticate to the SMTP relay";
+    #        type = types.str;
+    #      };
+    #      mailConnectTimeoutSeconds = mkOption {
+    #        description = "The timeout in seconds for connecting to the SMTP relay. Defaults to 15 seconds if not specified";
+    #        type = types.ints.unsigned;
+    #        default = 15;
+    #      };
+    #    };
+    #  };
+    #};
 
     client.enable = mkEnableOption "the Kanidm client";
     client.settings = mkOption {
@@ -939,6 +995,23 @@ in
         user = "kanidm";
         group = "kanidm";
       };
+    };
+
+    systemd.services.kanidm-mail-sender = mkIf cfg.mailSender.enable {
+      description = "kanidm mail sender";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+      serviceConfig = mkMerge [
+        defaultServiceConfig
+        {
+          StateDirectory = "kanidm";
+          StateDirectoryMode = "0700";
+          RuntimeDirectory = "kanidmd";
+          ExecStart = "${cfg.package}/bin/kanidm-mail-sender -c ${serverConfigFile} -m ${cfg.mailSender.configFile}";
+          User = "kanidm";
+          Group = "kanidm";
+        }
+      ];
     };
 
     systemd.services.kanidm = mkIf cfg.server.enable {
