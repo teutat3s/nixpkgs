@@ -95,7 +95,7 @@ stdenv.mkDerivation (finalAttrs: {
     export VERSION=${finalAttrs.version}
 
     # Not used here because we link element-web in installPhase, but electron-builder throws an error if it is not present
-    asar p ${element-web} apps/desktop/webapp.asar
+    asar p ${finalAttrs.element-web} apps/desktop/webapp.asar
 
     faketty pnpm -C apps/desktop exec nx build:ts
     faketty pnpm -C apps/desktop exec nx build:res
