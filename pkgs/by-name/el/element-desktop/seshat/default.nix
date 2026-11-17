@@ -8,26 +8,32 @@
   yarnConfigHook,
   yarnBuildHook,
   sqlcipher,
+  applyPatches,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "seshat-node";
-  version = "4.0.1";
+  version = "6.0.1";
 
-  src = fetchFromGitHub {
-    owner = "matrix-org";
-    repo = "seshat";
-    tag = finalAttrs.version;
-    hash = "sha256-2v/qXMCD+r+CSQHtP/YT62p4GoApbGz33kcZfJAKbOU=";
+  src = applyPatches {
+    src = fetchFromGitHub {
+      owner = "matrix-org";
+      repo = "seshat";
+      tag = finalAttrs.version;
+      hash = "sha256-8he69sTR+UdnABS/3uey1kBxY80cwXCRy7olR/RCcZc=";
+    };
+    patches = [
+      ./fix-cargo-lock.patch
+    ];
   };
 
   sourceRoot = "${finalAttrs.src.name}/seshat-node";
 
-  cargoHash = "sha256-krSm1wy7HkCOLEHPPHCx6V9Mj+FiavyhO6bLOz2/3Qw=";
+  cargoHash = "sha256-YzlqV4OZwGUaPounv+uLVzSk41rZslZE6vdN3KtxThk=";
 
   yarnOfflineCache = fetchYarnDeps {
     yarnLock = finalAttrs.src + "/seshat-node/yarn.lock";
-    hash = "sha256-hh9n8By/dNdKS55rcZkzCxmJWwQa6Ovt+4M3YP3/hDs=";
+    hash = "sha256-nBRq8QDO2BukjDIdZK3HwyyTqA4xfibJcmBlXRUQmfA=";
   };
 
   nativeBuildInputs = [
